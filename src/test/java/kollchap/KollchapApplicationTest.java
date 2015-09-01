@@ -20,6 +20,10 @@ import java.io.UnsupportedEncodingException;
 import static org.springframework.restdocs.RestDocumentation.document;
 import static org.springframework.restdocs.RestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,6 +49,17 @@ public class KollchapApplicationTest {
 
   @Test
   public void index() throws Exception {
+    this.mockMvc.perform(get("/").accept(MediaTypes.HAL_JSON))
+        .andExpect(status().isOk())
+        .andDo(document("index",
+            links(
+                linkWithRel("characters").description("The <<resources-notes, Characters resource>>")),
+            responseFields(
+                fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"))));
+  }
+
+  @Test
+  public void getCharacter() throws Exception {
     this.mockMvc.perform(get("/").accept(MediaTypes.HAL_JSON))
         .andExpect(status().isOk());
   }
