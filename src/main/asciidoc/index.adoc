@@ -13,7 +13,7 @@ griffio;
 [[overview-http-verbs]]
 == HTTP verbs
 
-RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+RESTful Kollchap tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP verbs.
 
 |===
@@ -35,7 +35,7 @@ use of HTTP verbs.
 [[overview-http-status-codes]]
 == HTTP status codes
 
-RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+RESTful Kollchap tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP status codes.
 
 |===
@@ -74,23 +74,19 @@ include::{snippets}/error/http-response.adoc[]
 [[overview-hypermedia]]
 == Hypermedia
 
-RESTful Notes uses hypermedia and resources include links to other resources in their
+RESTful Kollchap uses hypermedia and resources include links to other resources in their
 responses. Responses are in http://stateless.co/hal_specification.html[Hypertext Application
-Language (HAL)] format. Links can be found benath the `_links` key. Users of the API should
+Language (HAL)] format. Links can be found beneath the `_links` key. Users of the API should
 not created URIs themselves, instead they should use the above-described links to navigate
 from resource to resource.
 
 [[resources]]
 = Resources
 
-
-
 [[resources-index]]
 == Index
 
 The index provides the entry point into the service.
-
-
 
 [[resources-index-access]]
 === Accessing the index
@@ -105,9 +101,24 @@ include::{snippets}/index/response-fields.adoc[]
 
 include::{snippets}/index/http-response.adoc[]
 
-
-
 [[resources-index-links]]
 ==== Links
 
 include::{snippets}/index/links.adoc[]
+
+[[resources-character-retrieve]]
+=== Retrieve a Character
+
+A `GET` request will retrieve the details of a character
+
+==== Response structure
+
+include::{snippets}/character-get-example/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/character-get-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/character-get-example/http-response.adoc[]

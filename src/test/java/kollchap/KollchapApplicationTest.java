@@ -48,10 +48,10 @@ public class KollchapApplicationTest {
   }
 
   @Test
-  public void index() throws Exception {
+  public void indexExample() throws Exception {
     this.mockMvc.perform(get("/").accept(MediaTypes.HAL_JSON))
         .andExpect(status().isOk())
-        .andDo(document("index",
+        .andDo(document("index-example",
             links(
                 linkWithRel("characters").description("The <<resources-notes, Characters resource>>")),
             responseFields(
@@ -59,9 +59,23 @@ public class KollchapApplicationTest {
   }
 
   @Test
-  public void getCharacter() throws Exception {
-    this.mockMvc.perform(get("/").accept(MediaTypes.HAL_JSON))
-        .andExpect(status().isOk());
+  public void charactersGetExample() throws Exception {
+    this.mockMvc.perform(get("/characters").accept(MediaTypes.HAL_JSON))
+        .andExpect(status().isOk())
+        .andDo(document("characters-get-example"));
+  }
+
+  @Test
+  public void characterGetExample() throws Exception {
+    this.mockMvc.perform(get("/characters/1").accept(MediaTypes.HAL_JSON))
+        .andExpect(status().isOk())
+        .andDo(document("character-get-example",
+                responseFields(
+                    fieldWithPath("id").description("64 bit id"),
+                    fieldWithPath("new").description("64 bit id"),
+                    fieldWithPath("name").description("Full name of character"),
+                    fieldWithPath("background").description("Background history and motivation"),
+                    fieldWithPath("_links").description("<<resources-links,Links>> to other resources"))));
   }
 
   private String getLink(MvcResult result, String rel)

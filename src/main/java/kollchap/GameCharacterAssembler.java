@@ -1,7 +1,5 @@
 package kollchap;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -18,8 +16,6 @@ public class GameCharacterAssembler extends ResourceAssemblerSupport<GameCharact
   @Override
   public GameCharacterResource toResource(GameCharacter gameCharacter) {
     GameCharacterResource resource = createResourceWithId(gameCharacter.getId(), gameCharacter);
-    resource.add(linkTo(GameCharacterController.class).slash(gameCharacter.getId()).slash("tags")
-        .withRel("note-tags"));
     return resource;
   }
 
