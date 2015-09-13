@@ -53,7 +53,8 @@ public class KollchapApplicationTest {
         .andExpect(status().isOk())
         .andDo(document("index-example",
             links(
-                linkWithRel("characters").description("The <<resources-notes, Characters resource>>")),
+                linkWithRel("characters").description("The <<resources-notes, Characters resource>>"),
+                linkWithRel("profile").description("The <<resources-notes, alps resource>>")),
             responseFields(
                 fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"))));
   }
@@ -71,7 +72,6 @@ public class KollchapApplicationTest {
         .andExpect(status().isOk())
         .andDo(document("character-get-example",
                 responseFields(
-                    fieldWithPath("id").description("64 bit id"),
                     fieldWithPath("new").description("64 bit id"),
                     fieldWithPath("name").description("Full name of character"),
                     fieldWithPath("background").description("Background history and motivation"),

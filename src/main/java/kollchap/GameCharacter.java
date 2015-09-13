@@ -5,7 +5,7 @@ import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.Entity;
 
-@Entity
+@Entity(name = "character")
 public class GameCharacter extends AbstractPersistable<Long> implements Identifiable<Long> {
 
   private String name;
