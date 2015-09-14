@@ -7,11 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.rest.webmvc.BaseUri;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -36,6 +38,9 @@ public class KollchapApplicationTest {
 
   @Autowired
   private WebApplicationContext context;
+
+  @Autowired
+  private BaseUri baseUri;
 
   private MockMvc mockMvc;
 
@@ -71,11 +76,11 @@ public class KollchapApplicationTest {
     this.mockMvc.perform(get("/characters/1").accept(MediaTypes.HAL_JSON))
         .andExpect(status().isOk())
         .andDo(document("character-get-example",
-                responseFields(
-                    fieldWithPath("new").description("64 bit id"),
-                    fieldWithPath("name").description("Full name of character"),
-                    fieldWithPath("background").description("Background history and motivation"),
-                    fieldWithPath("_links").description("<<resources-links,Links>> to other resources"))));
+            responseFields(
+                fieldWithPath("new").description("64 bit id"),
+                fieldWithPath("name").description("Full name of character"),
+                fieldWithPath("background").description("Background history and motivation"),
+                fieldWithPath("_links").description("<<resources-links,Links>> to other resources"))));
   }
 
   private String getLink(MvcResult result, String rel)
