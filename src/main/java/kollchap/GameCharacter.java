@@ -1,5 +1,6 @@
 package kollchap;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.hateoas.Identifiable;
 
@@ -17,6 +18,19 @@ public class GameCharacter extends AbstractPersistable<Long> implements Identifi
   public GameCharacter(String name, String background) {
     this.name = name;
     this.background = background;
+  }
+
+  @Override
+  @JsonIgnore
+  public Long getId() {
+    return super.getId();
+  }
+
+
+  @Override
+  @JsonIgnore
+  public boolean isNew() {
+    return super.isNew();
   }
 
   public String getName() {

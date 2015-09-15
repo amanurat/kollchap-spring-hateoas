@@ -122,3 +122,21 @@ include::{snippets}/character-get-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/character-get-example/http-response.adoc[]
+
+[[resources-character-create]]
+
+=== Creating a Game Character
+
+A `POST` request is used to create a character
+
+==== Request structure
+
+include::{snippets}/character-create-example/request-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/character-create-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/character-create-example/http-response.adoc[]

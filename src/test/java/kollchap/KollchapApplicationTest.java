@@ -3,30 +3,34 @@ package kollchap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.rest.webmvc.BaseUri;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.UnsupportedEncodingException;
 
-import static org.springframework.restdocs.RestDocumentation.document;
-import static org.springframework.restdocs.RestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = KollchapApplication.class)
@@ -44,10 +48,15 @@ public class KollchapApplicationTest {
 
   private MockMvc mockMvc;
 
+
+  @Rule
+  public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
+
+
   @Before
   public void setUp() {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-        .apply(documentationConfiguration())
+        .apply(documentationConfiguration(restDocumentation))
         .alwaysDo(document("{method-name}/{step}/"))
         .build();
   }
@@ -77,11 +86,28 @@ public class KollchapApplicationTest {
         .andExpect(status().isOk())
         .andDo(document("character-get-example",
             responseFields(
-                fieldWithPath("new").description("64 bit id"),
                 fieldWithPath("name").description("Full name of character"),
                 fieldWithPath("background").description("Background history and motivation"),
                 fieldWithPath("_links").description("<<resources-links,Links>> to other resources"))));
   }
+
+
+  @Test
+  public void characterPostExample() throws Exception {
+
+    String bobert = objectMapper.writeValueAsString(new GameCharacter("Bobert", "Merchant in the dungeon"));
+
+    this.mockMvc.perform(post("/characters").accept(MediaTypes.HAL_JSON).content(bobert))
+        .andExpect(status().isCreated())
+        .andDo(document("character-create-example",
+            requestFields(
+                fieldWithPath("name").description("Full name of character"),
+                fieldWithPath("background").description("Background history and motivation"))))
+        .andReturn().getResponse()
+        .getHeader("Location");
+
+  }
+
 
   private String getLink(MvcResult result, String rel)
       throws UnsupportedEncodingException {
