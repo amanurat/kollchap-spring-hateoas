@@ -2,7 +2,7 @@
 
 Building up example with Spring REST Docs 
 
-(org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RC1)
+(org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RELEASE)
 
 Spring boot with spring-data-rest
 
