@@ -2,9 +2,9 @@
 
 Building up example with Spring REST Docs 
 
-(org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RELEASE)
+(org.springframework.restdocs:spring-restdocs-mockmvc:1.1.0.RELEASE)
 
-Spring boot with spring-data-rest
+Spring boot (spring-boot-gradle-plugin:1.3.6) with spring-data-rest
 
 ~~~
 ./gradlew test

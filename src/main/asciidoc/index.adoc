@@ -66,7 +66,7 @@ that describes the problem. The error object has the following structure:
 
 include::{snippets}/error/response-fields.adoc[]
 
-For example, a request that attempts to apply a non-existent tag to a note will produce a
+For example, a request that attempts get to a character will produce a
 `400 Bad Request` response:
 
 include::{snippets}/error/http-response.adoc[]
@@ -95,16 +95,16 @@ A `GET` request is used to access the index
 
 ==== Response structure
 
-include::{snippets}/index/response-fields.adoc[]
+include::{snippets}/index-example/response-fields.adoc[]
 
 ==== Example response
 
-include::{snippets}/index/http-response.adoc[]
+include::{snippets}/index-example/http-response.adoc[]
 
 [[resources-index-links]]
 ==== Links
 
-include::{snippets}/index/links.adoc[]
+include::{snippets}/index-example/links.adoc[]
 
 [[resources-character-retrieve]]
 === Retrieve a Character

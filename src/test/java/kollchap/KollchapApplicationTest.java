@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.rest.webmvc.BaseUri;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,8 +18,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.RequestDispatcher;
 import java.io.UnsupportedEncodingException;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -29,6 +32,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -48,10 +53,8 @@ public class KollchapApplicationTest {
 
   private MockMvc mockMvc;
 
-
   @Rule
-  public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
-
+  public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");
 
   @Before
   public void setUp() {
@@ -67,8 +70,8 @@ public class KollchapApplicationTest {
         .andExpect(status().isOk())
         .andDo(document("index-example",
             links(
-                linkWithRel("characters").description("The <<resources-notes, Characters resource>>"),
-                linkWithRel("profile").description("The <<resources-notes, alps resource>>")),
+                linkWithRel("characters").description("The <<resources-characters, Characters resource>>"),
+                linkWithRel("profile").description("The <<resources-characters, alps resource>>")),
             responseFields(
                 fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"))));
   }
@@ -108,6 +111,27 @@ public class KollchapApplicationTest {
 
   }
 
+
+  @Test
+  public void errorExample() throws Exception {
+    this.mockMvc
+            .perform(get("/error")
+                    .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 400)
+                    .requestAttr(RequestDispatcher.ERROR_REQUEST_URI, "/characters")
+                    .requestAttr(RequestDispatcher.ERROR_MESSAGE, "The character '/characters/99999999' does not exist"))
+            .andDo(print()).andExpect(status().isBadRequest())
+            .andExpect(jsonPath("error", is("Bad Request")))
+            .andExpect(jsonPath("timestamp", is(notNullValue())))
+            .andExpect(jsonPath("status", is(400)))
+            .andExpect(jsonPath("path", is(notNullValue())))
+            .andDo(document("error",
+                    responseFields(
+                            fieldWithPath("error").description("The HTTP error that occurred, e.g. `Bad Request`"),
+                            fieldWithPath("message").description("A description of the cause of the error"),
+                            fieldWithPath("path").description("The path to which the request was made"),
+                            fieldWithPath("status").description("The HTTP status code, e.g. `400`"),
+                            fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
+  }
 
   private String getLink(MvcResult result, String rel)
       throws UnsupportedEncodingException {
